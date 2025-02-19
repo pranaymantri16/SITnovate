@@ -1,6 +1,7 @@
-import  { useState } from 'react';
+import  { useEffect, useState } from 'react';
 import './uploadForm.css';
 import lighthouse from "@lighthouse-web3/sdk"
+import contract from '../Context/ABIContract';
 
 const CertificateUpload = () => {
   const [formData, setFormData] = useState({
@@ -11,12 +12,28 @@ const CertificateUpload = () => {
   
   const [formErrors, setFormErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [pdfHash,setpdfHash]=useState('')
   // eslint-disable-next-line no-unused-vars
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [IsMetaMaskConnected,setIsMetaMaskConnected]=useState(false)
   // eslint-disable-next-line no-unused-vars
   const [acc,setAcc]=useState('')
   const apiKey = 'fe386a57.500c16bd68584fedb93735086789a970';
+  // eslint-disable-next-line no-unused-vars
+  const[unique,setUniqueHash]=useState("");
+
+  useEffect(() => {
+    // eslint-disable-next-line no-unused-vars
+    contract.on("CertificateCreated", (blockNumber, uniqueHash, email, pdfHash,dob) => {
+      console.log("Certificate Created at Block:", blockNumber);
+      console.log("Unique Hash:", uniqueHash);
+      setUniqueHash(uniqueHash);
+    });
+
+    return () => {
+      contract.removeAllListeners("CertificateCreated"); 
+    };
+  }, []);
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -49,6 +66,19 @@ const CertificateUpload = () => {
     
     return errors;
   };
+  const createCertificateBlock=async()=>{
+    try {
+        const tx = await contract.createCertificate(
+            formData.email,
+            pdfHash,
+            formData.dob
+          );
+          await tx.wait(); // Wait for transaction confirmation
+          console.log("Transaction sent, waiting for event...");
+      } catch (error) {
+        console.error("Error:", error);
+      }
+  }
 
   const connectMetaMask = async () => {
     if (typeof window.ethereum !== 'undefined') {
@@ -78,11 +108,12 @@ const CertificateUpload = () => {
       setIsSubmitting(true);
       const file=formData?.file;
       const uploadResponse = await lighthouse.upload([file], apiKey);
-      console.log(uploadResponse);
-      
+      setpdfHash(uploadResponse);
+      await createCertificateBlock();
+      setIsSubmitting(false)      
     }
     else{
-        return
+        return;
     }
   };
 

@@ -108,6 +108,7 @@ export const getCertificate=async(req,res)=>{
         const certificate= await certificateModel.findOne({hash})
         return res.status(200).send({
             success:true,
+            message:"getting your certificate",
             certificate
         })
 

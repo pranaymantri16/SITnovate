@@ -1,0 +1,219 @@
+/* StudentPortal.css */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+  }
+  
+  body {
+    height: 100vh;
+    width: 100%;
+    background-color: #f0f2f5;
+  }
+  
+  .container {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+  }
+  
+  /* Left Section - Image */
+  .image-section {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .image-section img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+  
+  /* Image Overlay */
+  .image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.4));
+    display: flex;
+    align-items: center;
+    padding: 0 10%;
+  }
+  
+  .overlay-content {
+    color: white;
+    max-width: 80%;
+  }
+  
+  .overlay-content h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  }
+  
+  .overlay-content p {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  }
+  
+  /* Right Section - Form */
+  .form-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40%;
+    padding: 20px;
+    background-color: #f0f2f5;
+  }
+  
+  .form-container {
+    width: 400px;
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5px);
+  }
+  
+  .form-title {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #333;
+    font-size: 24px;
+  }
+  
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #555;
+  }
+  
+  .form-control {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+  }
+  
+  .form-control:focus {
+    border-color: #0099cc;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0, 153, 204, 0.2);
+  }
+  
+  .btn-primary {
+    width: 100%;
+    background-color: #0099cc;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .btn-primary:hover {
+    background-color: #007ab3;
+  }
+  
+  /* Logo */
+  .logo {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .logo-text {
+    font-size: 32px;
+    font-weight: bold;
+    color: #0099cc;
+  }
+  
+  /* Additional Elements */
+  .form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .forgot-password a {
+    color: #0099cc;
+    text-decoration: none;
+    font-size: 14px;
+  }
+  
+  .forgot-password a:hover {
+    text-decoration: underline;
+  }
+  
+  .alt-link {
+    text-align: center;
+    margin-top: 20px;
+    color: #666;
+    font-size: 14px;
+  }
+  
+  .alt-link a {
+    color: #0099cc;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  
+  .alt-link a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Remember Me Checkbox */
+  .remember-me {
+    display: flex;
+    align-items: center;
+  }
+  
+  .remember-me input {
+    margin-right: 8px;
+    width: auto;
+  }
+  
+  .remember-me label {
+    margin-bottom: 0;
+    font-weight: normal;
+    font-size: 14px;
+  }
+  
+  /* Responsive design */
+  @media (max-width: 992px) {
+    .container {
+      flex-direction: column;
+    }
+    
+    .image-section {
+      display: none;
+    }
+    
+    .form-section {
+      width: 100%;
+      height: 100%;
+    }
+    .error-message {
+        color: #f44336;
+        font-size: 14px;
+        margin-bottom: 15px;
+      }
+  }

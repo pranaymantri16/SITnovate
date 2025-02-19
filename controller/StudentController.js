@@ -7,6 +7,7 @@ import jwt from "jsonwebtoken"
 
 dotenv.config()
 export const registerStud=async(req,res)=>{
+    try{
     const{email,password}=req.body
     if(!email){
         return res.status(404).send({message:"E-mail is required"});
@@ -17,7 +18,7 @@ export const registerStud=async(req,res)=>{
 
     const student=await studModel.findOne({email})
         if(student){
-            return res.status(404).send({message:"E-mail already registered"});
+            return res.status(404).send({success:false,message:"E-mail already registered"});
         }
     const hashedpassword=await hashedPassword(password)
     const user=await new studModel({email:email,password:hashedpassword}).save()
@@ -26,7 +27,14 @@ export const registerStud=async(req,res)=>{
             message:"Student Registered Successfully",
             user
         })
-    
+    }
+    catch(error){
+        return res.status(400).send({
+            success:false,
+            message:"error while signup",
+            error
+        })
+    }
 }
 
 export const loginStud=async(req,res)=>{
