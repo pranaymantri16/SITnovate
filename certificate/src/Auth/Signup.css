@@ -21,15 +21,19 @@
   
   .brand-logo {
     position: absolute;
-    top: 250px;
-    left: 20px;
+    top: 225px;
+    left: 270px;
     z-index: 2;
   }
   
   .brand-logo h1 {
-    font-size: 32px;
+    font-size: 60px;
     font-weight: bold;
-    color: #2196F3;
+    background: linear-gradient( #595961, #34403f);
+    /* background: #34403f; */
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
     margin: 0;
   }
   

@@ -1,19 +1,19 @@
 import  { useState } from 'react';
+import { useAuth } from "../Context/AuthContext"
 import axios from 'axios';
 import './Signup.css';
-import { useNavigate } from "react-router-dom";
-const UniversityRegistration = () => {
-    const navigate=useNavigate();
+import { useNavigate } from 'react-router-dom';
+const Signin = () => {
   const [formData, setFormData] = useState({
-    name: '',
-    location: '',
     email:'',
     password:'',
-    cfmpwd:''
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  // eslint-disable-next-line no-unused-vars
+  const[auth,setAuth]=useAuth()
+  const navigate=useNavigate();
 
   const handleChange = (e) => {
     setFormData({
@@ -30,14 +30,16 @@ const UniversityRegistration = () => {
     setSuccessMessage('');
 
     try {
-      if(formData.password!=formData.cfmpwd){
-        setError('Password mismatch');
-        return;
-      }
-      const {data} = await axios.post('/api/auth/signup/uni', {name:formData.name,location:formData.location,email:formData.email,password:formData.password});
+      const {data} = await axios.post('/api/auth/signin/uni', {email:formData.email,password:formData.password});
       if(data.success){
         setSuccessMessage(`University registered successfully!`);
-        navigate('/signin')
+        setAuth({
+            ...auth,
+            user:data.user,
+            token:data.token
+        })
+        localStorage.setItem('auth',JSON.stringify(data))
+        navigate('/uni/home')
       }
       else{
         setError(data.message);
@@ -58,25 +60,16 @@ const UniversityRegistration = () => {
       
       {/* Brand Logo */}
       <div className="brand-logo">
-        <h1>credBlock Sign Up</h1>
+        <h1>credBlock Sign In</h1>
       </div>
 
       {/* Registration Form */}
       <div className="form-container">
         <div className="form-content">
-          <h2>Register Your University</h2>
+          <h2>SignIn with Your University</h2>
           
           <form onSubmit={handleSubmit}>
-            <div className="input-group">
-              <input
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                required
-                placeholder="University Name"
-              />
-            </div>
+            
             <div className="input-group">
               <input
                 type="text"
@@ -97,27 +90,6 @@ const UniversityRegistration = () => {
                 placeholder="Password"
               />
             </div>
-            <div className="input-group">
-              <input
-                type="text"
-                name="cfmpwd"
-                value={formData.cfmpwd}
-                onChange={handleChange}
-                required
-                placeholder="Confirm Password"
-              />
-            </div>
-            <div className="input-group">
-              <input
-                type="text"
-                name="location"
-                value={formData.location}
-                onChange={handleChange}
-                required
-                placeholder="Location"
-              />
-            </div>
-
             {error && <div className="error-message">{error}</div>}
             {successMessage && <div className="success-message">{successMessage}</div>}
 
@@ -131,4 +103,4 @@ const UniversityRegistration = () => {
   );
 };
 
-export default UniversityRegistration;
+export default Signin;
