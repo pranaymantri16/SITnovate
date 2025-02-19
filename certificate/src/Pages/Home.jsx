@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './HomePage.css';
 import { useAuth } from '../Context/AuthContext';
 
@@ -6,6 +6,12 @@ const HomePage = () => {
   
   // eslint-disable-next-line no-unused-vars
   const [auth,setAuth]=useAuth();
+  const  navigate=useNavigate()
+  const handleLogout = () => {
+    setAuth(null);
+    localStorage.removeItem("auth"); 
+    navigate('/')
+  };
   return (
     <div className="home-container">
       {/* Navbar */}
@@ -15,13 +21,29 @@ const HomePage = () => {
         </div>
         <div className="nav-buttons">
           <Link  className="nav-btn">About</Link>
-          <Link to="/signup" className="nav-btn">Sign Up</Link>
-          <Link to="/signin" className="nav-btn signin">Sign In</Link>
+          {auth?.user ?(
+            <>
+            <Link className="nav-btn">Help</Link>
+              <div className="dropdown">
+                <button className="dropdown-btn">{auth?.user?.code}</button>
+                <div className="dropdown-content">
+                  <Link to="/university-info">University Info</Link>
+                  <button onClick={handleLogout}>Logout</button>
+                </div>
+              </div>
+            </>
+          ):(
+            <>
+            <Link to="/signup" className="nav-btn">Sign Up</Link>
+            <Link to="/signin" className="nav-btn signin">Sign In</Link>
+            </>
+          )}
+          
         </div>
       </nav>
 
       {/* Hero Section */}
-      {auth?(
+      {auth?.user ?(
       <>
       <section className="hero-section">
         <div className="hero-content">
@@ -33,7 +55,7 @@ const HomePage = () => {
             <p className="sub-heading">
               Get storage, retrieval and verification solution in one app
             </p>
-            <button className="get-started-btn">Upload your certificate</button>
+            <button className="get-started-btn" onClick={()=>{navigate('/uni/upload')}}>Upload your certificate</button>
           </div>
           <div className="hero-image">
             <img src="../../public/credBlock.jpg" alt="Digital Certificates" />
@@ -57,7 +79,7 @@ const HomePage = () => {
             <button className="get-started-btn">Get Started</button>
           </div>
           <div className="hero-image">
-            <img src="credBlock.jpg" alt="Digital Certificates" />
+            <img src="../../public/credBlock.jpg" alt="Digital Certificates" />
           </div>
         </div>
       </section>
