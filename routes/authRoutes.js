@@ -1,8 +1,16 @@
 import express from 'express';
-import { registerUniversity } from '../controller/UniversityController.js';
+import { getCertificate, loginUniversity, registerUniversity, uploadCertificate } from '../controller/UniversityController.js';
+import { loginStud, registerStud } from '../controller/StudentController.js';
 
 const route=express.Router();
 
 route.post('/signup/uni',registerUniversity);
+route.post('/signin/uni',loginUniversity);
+route.post('/signup/stud',registerStud);
+route.post('/signin/stud',loginStud);
+
+route.post('/certificate',uploadCertificate);
+route.get('/certificate',getCertificate);
+
 
 export default route;

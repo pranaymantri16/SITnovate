@@ -1,6 +1,11 @@
 import universityModel from "../models/universityModel.js";
-import { hashedPassword } from "../Helper/authHelper.js";
+import certificateModel from "../models/certificateModel.js";
+import { checkPassword, hashedPassword } from "../Helper/authHelper.js";
+import { generateHash } from "../Helper/authHelper.js";
+import jwt from "jsonwebtoken"
+import dotenv from "dotenv"
 
+dotenv.config()
 export const registerUniversity=async(req,res)=>{
     try{
     const {email,name,location,password}=req.body
@@ -37,10 +42,75 @@ export const registerUniversity=async(req,res)=>{
     }
 }
 
-export const uploadInformation=async(req,res)=>{
+
+export const loginUniversity=async(req,res)=>{
     try {
-        const { email,dob,block_address }=req.body
-        
+        const {email,password} = req.body;
+        if(email==null){
+            return res.status(400).send({message:"Enter correct email!"});
+        }
+        if(!password){
+            return res.status(400).send({message:"Password is required!"});
+        }
+        const university = await universityModel.findOne({email});
+        if(await checkPassword(password,university.password)){
+            const token=jwt.sign({_id:university._id},process.env.JWT_SECRET,{expiresIn:'7d'});
+            return res.status(201).send({
+                success:true,
+                message:"User Logged-In Successfully",
+                token,
+                user:{
+                    id:university._id,
+                    email:university.email,
+                    code:university.uid
+                }
+            })
+        }
+        else{
+            return res.status(400).send({
+                message:"Invalid user email or password"
+            })
+        }
+    }
+     catch (error){
+        console.log(error)
+        return res.status(400).send({
+            success:false,
+            message:"Error in university Sign-in",
+            error
+        })
+    }
+}
+export const uploadCertificate=async(req,res)=>{
+    try {
+
+        const { email,dob,block_address,clg_uid }=req.body
+        const hash=await generateHash(email,dob);
+        console.log(hash)
+        const certificate= await new certificateModel({clg_uid:clg_uid,hash:hash,block_address:block_address}).save()
+        console.log(certificate)
+        return res.status(200).send({
+            success:true,
+            certificate
+        })
+    } catch (error) {
+        console.log(error)
+        return res.status(400).send({
+            success:false,
+            message:"Error in uploading the certificate"
+        })
+    }
+}
+export const getCertificate=async(req,res)=>{
+    try {
+        const { email,dob }=req.body
+        const hash=await generateHash(email,dob);
+        const certificate= await certificateModel.findOne({hash})
+        return res.status(200).send({
+            success:true,
+            certificate
+        })
+
     } catch (error) {
         return res.status(400).send({
             success:false,

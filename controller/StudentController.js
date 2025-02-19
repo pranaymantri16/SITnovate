@@ -1,6 +1,11 @@
 import studModel from "../models/studentModel.js";
 import { hashedPassword } from "../Helper/authHelper.js";
 import { checkPassword } from "../Helper/authHelper.js";
+import dotenv from "dotenv"
+import universityModel from "../models/universityModel.js";
+import jwt from "jsonwebtoken"
+
+dotenv.config()
 export const registerStud=async(req,res)=>{
     const{email,password}=req.body
     if(!email){
@@ -15,7 +20,7 @@ export const registerStud=async(req,res)=>{
             return res.status(404).send({message:"E-mail already registered"});
         }
     const hashedpassword=await hashedPassword(password)
-    const user=await new universityModel({email:email,password:hashedpassword}).save()
+    const user=await new studModel({email:email,password:hashedpassword}).save()
         return res.status(201).send({
             success:true,
             message:"Student Registered Successfully",
