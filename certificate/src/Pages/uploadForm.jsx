@@ -2,6 +2,8 @@ import  { useEffect, useState } from 'react';
 import './uploadForm.css';
 import lighthouse from "@lighthouse-web3/sdk"
 import contract from '../Context/ABIContract';
+import axios from 'axios';
+import { useAuth } from '../Context/AuthContext';
 
 const CertificateUpload = () => {
   const [formData, setFormData] = useState({
@@ -11,6 +13,8 @@ const CertificateUpload = () => {
   });
   
   const [formErrors, setFormErrors] = useState({});
+  // eslint-disable-next-line no-unused-vars
+  const [auth,setAuth]=useAuth()
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [pdfHash,setpdfHash]=useState('')
   // eslint-disable-next-line no-unused-vars
@@ -73,8 +77,12 @@ const CertificateUpload = () => {
             pdfHash,
             formData.dob
           );
-          await tx.wait(); // Wait for transaction confirmation
-          console.log("Transaction sent, waiting for event...");
+          await tx.wait(); 
+        const {data}=await axios.post('/api/auth/certificate',{email:formData.email,dob:formData.dob,block_address:unique,clg_uid:auth?.user?.code})
+        if(data.success){
+          console.log(data.certificate)
+          window.location.reload();
+        }
       } catch (error) {
         console.error("Error:", error);
       }
@@ -108,7 +116,7 @@ const CertificateUpload = () => {
       setIsSubmitting(true);
       const file=formData?.file;
       const uploadResponse = await lighthouse.upload([file], apiKey);
-      setpdfHash(uploadResponse);
+      setpdfHash(uploadResponse.data.Hash);
       await createCertificateBlock();
       setIsSubmitting(false)      
     }
@@ -193,7 +201,7 @@ const CertificateUpload = () => {
         <h1 className="upload-heading">Connect to your metamask Account</h1>
           <button 
             onClick={connectMetaMask}
-            className={`submit-button ${IsMetaMaskConnected ? 'connected' : ''}`}
+            className={`${IsMetaMaskConnected ? 'connected' : ''}`}
           >
             {IsMetaMaskConnected ? 'MetaMask Connected' : 'Connect MetaMask'}
           </button>

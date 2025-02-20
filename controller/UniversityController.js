@@ -1,7 +1,6 @@
 import universityModel from "../models/universityModel.js";
 import certificateModel from "../models/certificateModel.js";
 import { checkPassword, hashedPassword } from "../Helper/authHelper.js";
-import { generateHash } from "../Helper/authHelper.js";
 import jwt from "jsonwebtoken"
 import dotenv from "dotenv"
 
@@ -83,12 +82,8 @@ export const loginUniversity=async(req,res)=>{
 }
 export const uploadCertificate=async(req,res)=>{
     try {
-
-        const { email,dob,block_address,clg_uid }=req.body
-        const hash=await generateHash(email,dob);
-        console.log(hash)
-        const certificate= await new certificateModel({clg_uid:clg_uid,hash:hash,block_address:block_address}).save()
-        console.log(certificate)
+        const { email,dob,block_address,clg_uid}=req.body
+        const certificate= await new certificateModel({clg_uid:clg_uid,email:email,dob:dob,block_address:block_address}).save()
         return res.status(200).send({
             success:true,
             certificate
@@ -104,8 +99,7 @@ export const uploadCertificate=async(req,res)=>{
 export const getCertificate=async(req,res)=>{
     try {
         const { email,dob }=req.body
-        const hash=await generateHash(email,dob);
-        const certificate= await certificateModel.findOne({hash})
+        const certificate= await certificateModel.findOne({email:email,dob:dob})
         return res.status(200).send({
             success:true,
             message:"getting your certificate",

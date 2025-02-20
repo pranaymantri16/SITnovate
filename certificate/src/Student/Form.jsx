@@ -5,8 +5,42 @@ import './getForm.css'
 
 const Form = () => {
     const [dob,setDob]=useState('');
+    // eslint-disable-next-line no-unused-vars
     const [auth,setAuth]=useAuth();
     const[certificates,setCertificate]=useState()
+
+    async function downloadCertificate(certificateCID) {
+        try {
+          // Construct Lighthouse gateway URL
+          const fileUrl = `https://gateway.lighthouse.storage/ipfs/${certificateCID}`;
+      
+          // Fetch file as a blob
+          const response = await fetch(fileUrl);
+          if (!response.ok) {
+            throw new Error(`Failed to fetch file: ${response.statusText}`);
+          }
+      
+          const blob = await response.blob();
+          const url = window.URL.createObjectURL(blob);
+      
+          // Create an invisible link & trigger download
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = "certificate.pdf";  // Change file extension as needed
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+      
+          // Cleanup the object URL
+          window.URL.revokeObjectURL(url);
+      
+          console.log("File downloaded successfully!");
+        } catch (error) {
+          console.error("Error downloading certificate:", error);
+        }
+      }
+      
+
     const handleSubmit=async(e)=>{
         e.preventDefault()
         try{
@@ -56,6 +90,13 @@ const Form = () => {
                 <button type="submit" className="btn-primary">Retrieve</button>
                 </form>
             </div>
+            {certificates && (
+            <button
+            onClick={() => downloadCertificate(certificates)}
+            className="px-4 py-2 bg-blue-500 text-white rounded">
+            Download Certificate
+            </button>
+            )}
         </div>
         </div>
       );

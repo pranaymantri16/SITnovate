@@ -21,7 +21,7 @@ const StudentLogin = () => {
           user:data.user,
           token:data.token
       })
-      localStorage.setItem("auth",JSON.stringify(data));
+      localStorage.setItem("student",JSON.stringify(data));
       alert(data.message)
           alert(data.message)
           navigate('/student/home');
@@ -84,7 +84,7 @@ const StudentLogin = () => {
               />
             </div>
             
-            <div className="form-options">
+            {/* <div className="form-options">
               <div className="remember-me">
                 <input type="checkbox" id="remember" name="remember" />
                 <label htmlFor="remember">Remember me</label>
@@ -92,7 +92,7 @@ const StudentLogin = () => {
               <div className="forgot-password">
                 <a href="/forgot-password">Forgot Password?</a>
               </div>
-            </div>
+            </div> */}
             {error && <div className="error-message">{error}</div>}
             <button type="submit" className="btn-primary btn-login">Login</button>
           </form>

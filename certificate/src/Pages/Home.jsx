@@ -21,6 +21,7 @@ const HomePage = () => {
         </div>
         <div className="nav-buttons">
           <Link  className="nav-btn">About</Link>
+          {/* <a href='/stud' className="nav-btn">CredStudent</a> */}
           {auth?.user ?(
             <>
             <Link className="nav-btn">Help</Link>

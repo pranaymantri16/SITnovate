@@ -1,6 +1,6 @@
 import bcrypt, { hash } from 'bcrypt';
+import keccak256 from 'keccak256';
 import crypto from "crypto";
-
 
 export const hashedPassword=async(string)=>{
     try{
@@ -23,8 +23,7 @@ export const checkPassword=async(password1,password2)=>{
     }
 }
 
-export const generateHash=async(email, dob)=> {
-    const SALT="Univers!ty_@_Secre&"
-    const hash= await crypto.createHash("sha256").update(email + dob + SALT).digest("hex");
-    return hash;
-  }
+// export const generateHash=async(email, dob)=> {
+//     const data = email.trim().toLowerCase() + dob.trim(); // Ensure consistent input format
+//     return crypto.createHash("sha256").update(data).digest("hex");
+//   }

@@ -5,7 +5,11 @@ const certificateModel=new mongoose.Schema({
         type: String,
         required:true
     },
-    hash:{
+    email:{
+        type:String,
+        required:true
+    },
+    dob:{
         type:String,
         required:true
     },

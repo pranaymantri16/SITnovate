@@ -1,15 +1,13 @@
 import { Link, useNavigate } from 'react-router-dom';
-import './HomePage.css';
+// import './HomePage.css';
 import { useAuth } from '../Context/AuthContext';
 
 const HomePages = () => {
-  
-  // eslint-disable-next-line no-unused-vars
   const [auth,setAuth]=useAuth();
   const  navigate=useNavigate()
   const handleLogout = () => {
     setAuth(null);
-    localStorage.removeItem("auth"); 
+    localStorage.removeItem("student"); 
     navigate('/')
   };
   return (
@@ -36,8 +34,8 @@ const HomePages = () => {
             </>
           ):(
             <>
-            <Link to="/signup" className="nav-btn">Sign Up</Link>
-            <Link to="/signin" className="nav-btn signin">Sign In</Link>
+            <Link to="/stud/signup" className="nav-btn">Sign Up</Link>
+            <Link to="/stud/signin" className="nav-btn signin">Sign In</Link>
             </>
           )}
           
