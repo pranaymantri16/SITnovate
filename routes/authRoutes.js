@@ -10,7 +10,7 @@ route.post('/signup/stud',registerStud);
 route.post('/signin/stud',loginStud);
 
 route.post('/certificate',uploadCertificate);
-route.get('/certificate',getCertificate);
+route.post('/getcertificate',getCertificate);
 
 route.get('/uni-auth', RequireSignIn, (req,res) => {
     return res.status(200).send({ok:true})

@@ -13,9 +13,8 @@ const certificateModel=new mongoose.Schema({
         type:String,
         required:true
     },
-    block_address:{
+    pdfHash:{
         type:String,
-        required:true
     }
 },{timestamps:true})
 

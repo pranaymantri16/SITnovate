@@ -4,10 +4,7 @@ import HomePage from './Pages/Home'
 import Signin from './Auth/Signin'
 import Access from './Context/Access'
 import CertificateUpload from './Pages/uploadForm'
-import StudentRegistration from './Student/Signup'
-import StudentLogin from './Student/Signin'
-import HomePages from './Student/Home'
-import Form from './Student/Form'
+import Form from './Pages/Form'
 
 function App() {
 
@@ -16,6 +13,7 @@ function App() {
     <Routes>
       <Route path='/signup' element={<UniversityRegistration/>}/>
       <Route path='/signin' element={<Signin/>}/>
+      <Route path='/student' element={<Form/>}/>
       <Route path='/' element={<HomePage/>}/>
       <Route path='uni' element={<Access/>}>
       <Route path='/uni/home' element={<HomePage/>}/>

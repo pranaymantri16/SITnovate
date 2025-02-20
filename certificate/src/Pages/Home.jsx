@@ -21,6 +21,7 @@ const HomePage = () => {
         </div>
         <div className="nav-buttons">
           <Link  className="nav-btn">About</Link>
+          <Link to='/student' className='nav-btn'>Student</Link>
           {/* <a href='/stud' className="nav-btn">CredStudent</a> */}
           {auth?.user ?(
             <>
@@ -77,7 +78,7 @@ const HomePage = () => {
             <p className="sub-heading">
               Get storage, retrieval and verification solution in one app
             </p>
-            <button className="get-started-btn">Get Started</button>
+            <button onClick={()=>{navigate('/signup')}} className="get-started-btn">Get Started</button>
           </div>
           <div className="hero-image">
             <img src="../../public/credBlock.jpg" alt="Digital Certificates" />

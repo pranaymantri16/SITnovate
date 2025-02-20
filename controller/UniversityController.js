@@ -82,8 +82,9 @@ export const loginUniversity=async(req,res)=>{
 }
 export const uploadCertificate=async(req,res)=>{
     try {
-        const { email,dob,block_address,clg_uid}=req.body
-        const certificate= await new certificateModel({clg_uid:clg_uid,email:email,dob:dob,block_address:block_address}).save()
+        const { email,dob,pdfHash,clg_uid}=req.body
+        console.log(req.body)
+        const certificate= await new certificateModel({clg_uid:clg_uid,email:email,dob:dob,pdfHash:pdfHash}).save()
         return res.status(200).send({
             success:true,
             certificate
@@ -98,8 +99,8 @@ export const uploadCertificate=async(req,res)=>{
 }
 export const getCertificate=async(req,res)=>{
     try {
-        const { email,dob }=req.body
-        const certificate= await certificateModel.findOne({email:email,dob:dob})
+        const {email, dob}=req.body
+        const certificate= await certificateModel.find({email:email,dob:dob})
         return res.status(200).send({
             success:true,
             message:"getting your certificate",

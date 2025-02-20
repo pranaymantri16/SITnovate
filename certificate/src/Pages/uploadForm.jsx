@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import  { useEffect, useState } from 'react';
 import './uploadForm.css';
 import lighthouse from "@lighthouse-web3/sdk"
@@ -16,7 +17,7 @@ const CertificateUpload = () => {
   // eslint-disable-next-line no-unused-vars
   const [auth,setAuth]=useAuth()
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [pdfHash,setpdfHash]=useState('')
+  const [pdfHash,setpdfHash]=useState(null)
   // eslint-disable-next-line no-unused-vars
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [IsMetaMaskConnected,setIsMetaMaskConnected]=useState(false)
@@ -24,13 +25,13 @@ const CertificateUpload = () => {
   const [acc,setAcc]=useState('')
   const apiKey = 'fe386a57.500c16bd68584fedb93735086789a970';
   // eslint-disable-next-line no-unused-vars
-  const[unique,setUniqueHash]=useState("");
+  const[unique,setUniqueHash]=useState('');
 
   useEffect(() => {
     // eslint-disable-next-line no-unused-vars
     contract.on("CertificateCreated", (blockNumber, uniqueHash, email, pdfHash,dob) => {
       console.log("Certificate Created at Block:", blockNumber);
-      console.log("Unique Hash:", uniqueHash);
+      alert("Saved Up Block",pdfHash);
       setUniqueHash(uniqueHash);
     });
 
@@ -78,11 +79,6 @@ const CertificateUpload = () => {
             formData.dob
           );
           await tx.wait(); 
-        const {data}=await axios.post('/api/auth/certificate',{email:formData.email,dob:formData.dob,block_address:unique,clg_uid:auth?.user?.code})
-        if(data.success){
-          console.log(data.certificate)
-          window.location.reload();
-        }
       } catch (error) {
         console.error("Error:", error);
       }
@@ -106,24 +102,54 @@ const CertificateUpload = () => {
     }
   }
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const errors = validateForm();
     setFormErrors(errors);
-    
-    
+  
     if (Object.keys(errors).length === 0) {
       setIsSubmitting(true);
-      const file=formData?.file;
+      const file = formData?.file;
+  
+      // Upload the file and get the hash
       const uploadResponse = await lighthouse.upload([file], apiKey);
-      setpdfHash(uploadResponse.data.Hash);
-      await createCertificateBlock();
-      setIsSubmitting(false)      
-    }
-    else{
-        return;
+      setpdfHash(uploadResponse.data.Hash); // This is async, so don't use pdfHash immediately
+  
+      console.log("Upload Response Hash:", uploadResponse.data.Hash);
+    } else {
+      return;
     }
   };
+  
+  // ** Wait for pdfHash to update before making API call **
+  useEffect(() => {
+    const processCertificate = async () => {
+        if (pdfHash) {
+            try {
+                const response = await axios.post('/api/auth/certificate', {
+                    email: formData.email,
+                    dob: formData.dob,
+                    pdfHash: pdfHash,
+                    clg_uid: auth?.user?.code
+                });
+
+                console.log(response.data);
+                if (response.data.success) {
+                    console.log(response.data.certificate);
+                }
+
+                await createCertificateBlock(); 
+                setIsSubmitting(false);
+                window.location.reload();
+            } catch (error) {
+                console.error("Error in API call:", error);
+            }
+        }
+    };
+
+    processCertificate();
+}, [pdfHash]); // Dependency array to trigger when pdfHash updates
+ 
 
   return (
     <>
@@ -198,6 +224,8 @@ const CertificateUpload = () => {
 
       ):(
         <>
+        <div className="upload-page">
+        <div className="upload-container">
         <h1 className="upload-heading">Connect to your metamask Account</h1>
           <button 
             onClick={connectMetaMask}
@@ -205,6 +233,8 @@ const CertificateUpload = () => {
           >
             {IsMetaMaskConnected ? 'MetaMask Connected' : 'Connect MetaMask'}
           </button>
+          </div>
+          </div>
         </>
       )}
     </>
